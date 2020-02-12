@@ -17,6 +17,7 @@ import pandas
 
 ### Приклад запуску (рік і локація) введення та скріншот згенерованої мапи
 ```
+>>> python main.py
 Please enter a year you would like to have a map for: 2000
 Please enter your location (format: lat, long): 49.83826, 24.02324
 Map is generating...
