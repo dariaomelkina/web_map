@@ -13,7 +13,9 @@ import folium
 import pandas
 ```
 
+### Структура html файлу
 
+### Висновок
 
 ## Автори
 
