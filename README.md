@@ -13,12 +13,6 @@ import folium
 import pandas
 ```
 ```
-import geopy
-```
-```
-import geocoder
-```
-```
 from geopy.geocoders import Nominatim
 ```
 ### Структура html файлу
