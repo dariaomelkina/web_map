@@ -8,7 +8,7 @@ def read_file():
     """
 
     """
-    data = pandas.read_csv("locations.csv", error_bad_lines=False)
+    data = pandas.read_csv("locations1.csv", error_bad_lines=False)
     movie = data['movie']
     year = data['year']
     location = data['location']
@@ -18,51 +18,72 @@ def read_file():
     return x
 
 
-def year_list_with_coordinates(lst, year):
+def place(lat, long):
     """
 
     """
+    ad = str(lat) + ", " + str(long)
+    geolocator = Nominatim(user_agent="specify_your_app_name_here", timeout=5)
+    location = geolocator.reverse(ad,  language='en', timeout=5)
+    return "".join(location.address.split(","))
+
+
+def year_list_with_coordinates(lst, year):
+    """
+    (list, str) -> list
+    """
     answer_movie = []
-    answer_countries = []
     geolocator = Nominatim(user_agent="specify_your_app_name_here", timeout=3)
     geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1)
     for i in lst:
-        if i[1] == year:
-            # location_geo = geolocator.geocode(i[2])
-            # try:
-            #     latitude_geo, longitude_geo = location_geo.latitude, location_geo.longitude
-            # except:
-            #     continue
-            answer_movie.append([i])
-            answer_countries.append([i[2]])
-    return answer_countries, answer_countries
+        if str(i[1]) == year:
+            try:
+                location_geo = geolocator.geocode(i[2])
+                latitude_geo, longitude_geo = location_geo.latitude, location_geo.longitude
+                answer_movie.append([i, latitude_geo, longitude_geo])
+            except:
+                continue
+    return answer_movie
 
 lst1 = read_file()
-print(year_list_with_coordinates(lst1, '2000'))
+print(year_list_with_coordinates(lst1, '2014'))
 
 
 def map_func(year, lat, long):
     """
-
+    (str, float, float) -> None
     """
+    # your_address = place(lat, long)
+    # print(your_address)
+    your_lat = round(lat, 1)
     geolocator = Nominatim(user_agent="specify_your_app_name_here")
     map = folium.Map(location=[lat, long], zoom_start=7, tiles='Stamen Terrain')
-    zip_file = read_file()
+    file = read_file()
+    finished_file = year_list_with_coordinates(file, year)
     fg_movies = folium.FeatureGroup(name="Movies")
-    for i in zip_file:
-        if i[1] == year:
-            location_geo = geolocator.geocode(i[2])
-            latitude_geo, longitude_geo = location_geo.latitude, location_geo.longitude
-            fg_movies.add_child(folium.CircleMarker(location=[latitude_geo, longitude_geo],
-                                                    radius=10,
-                                                    popup=i[0],
-                                                    fill_color='red',
-                                                    color='red', fill_opacity=0.5))
+    counter = 0
+    for i in finished_file:
+        # a = i[2].split()[-2:]
+        # for y in a:
+        #     print(y)
+        #     if y in your_address:
+                location_geo = geolocator.geocode(i[2], timeout=5)
+                if type(location_geo) == str:
+                    latitude_geo, longitude_geo = location_geo.latitude, location_geo.longitude
+                    fg_movies.add_child(folium.CircleMarker(location=[latitude_geo, longitude_geo],
+                                                            radius=10,
+                                                            popup=i[0],
+                                                            fill_color='red',
+                                                            color='red', fill_opacity=0.5))
+        #         counter += 1
+        #         print(counter)
+        # if counter == 10:
+        #     break
     map.add_child(fg_movies)
     map.add_child(folium.LayerControl())
     map.save('Map_2.html')
 
-# map_func(2016, 51.509865, -0.118092)
+# map_func('2012', 48.314775, 25.082925)
 
 
 
