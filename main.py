@@ -2,15 +2,7 @@ import folium
 import pandas
 from geopy.geocoders import Nominatim
 from geopy.extra.rate_limiter import RateLimiter
-import threading
 
-
-def alarm():
-    return 1
-
-
-timer = threading.Timer(2.0, gfg)
-timer.start()
 
 geolocator = Nominatim(user_agent="specify_your_app_name_here", timeout=3)
 geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1)
