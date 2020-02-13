@@ -5,19 +5,17 @@
 
 ### Передумови
 
-Необхідно імпортувати бібліотеки folium та pandas. 
+Необхідно встановити бібліотеки folium, pandas та geopy. 
 ```
-import folium
-```
-```
-import pandas
+pip install folium
 ```
 ```
-from geopy.geocoders import Nominatim
+pip install pandas
 ```
 ```
-from geopy.extra.rate_limiter import RateLimiter
+pip install geopy
 ```
+
 ### Структура html файлу
 
 
