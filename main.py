@@ -1,14 +1,14 @@
 import folium
 import pandas
-import geopy
-import geocoder
 from geopy.geocoders import Nominatim
+from geopy.extra.rate_limiter import RateLimiter
+
 
 def read_file():
     """
 
     """
-    data = pandas.read_csv("locations1.csv")
+    data = pandas.read_csv("locations.csv", error_bad_lines=False)
     movie = data['movie']
     year = data['year']
     location = data['location']
@@ -18,7 +18,30 @@ def read_file():
     return x
 
 
-def map(year, lat, long):
+def year_list_with_coordinates(lst, year):
+    """
+
+    """
+    answer_movie = []
+    answer_countries = []
+    geolocator = Nominatim(user_agent="specify_your_app_name_here", timeout=3)
+    geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1)
+    for i in lst:
+        if i[1] == year:
+            # location_geo = geolocator.geocode(i[2])
+            # try:
+            #     latitude_geo, longitude_geo = location_geo.latitude, location_geo.longitude
+            # except:
+            #     continue
+            answer_movie.append([i])
+            answer_countries.append([i[2]])
+    return answer_countries, answer_countries
+
+lst1 = read_file()
+print(year_list_with_coordinates(lst1, '2000'))
+
+
+def map_func(year, lat, long):
     """
 
     """
@@ -27,6 +50,7 @@ def map(year, lat, long):
     zip_file = read_file()
     fg_movies = folium.FeatureGroup(name="Movies")
     for i in zip_file:
+        if i[1] == year:
             location_geo = geolocator.geocode(i[2])
             latitude_geo, longitude_geo = location_geo.latitude, location_geo.longitude
             fg_movies.add_child(folium.CircleMarker(location=[latitude_geo, longitude_geo],
@@ -38,7 +62,7 @@ def map(year, lat, long):
     map.add_child(folium.LayerControl())
     map.save('Map_2.html')
 
-map(2012, 51.509865, -0.118092)
+# map_func(2016, 51.509865, -0.118092)
 
 
 
@@ -80,7 +104,7 @@ map(2012, 51.509865, -0.118092)
 
 
 # if __name__ == "__main__":
-#     year = int(input("Please enter a year you would like to have a map for: "))
+#     year = input("Please enter a year you would like to have a map for: ")
 #     lat, long = map((lambda x: float(x)), input("Please enter your location (format: lat, long): ").split(", "))
 #     print("Map is generating...\nPlease wait...")
 #     answer = 0
