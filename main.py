@@ -36,7 +36,7 @@ def year_list_with_coordinates(lst, year):
     geolocator = Nominatim(user_agent="specify_your_app_name_here", timeout=3)
     geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1)
     for i in lst:
-        if str(i[1]) == year:
+        if i[1] == year:
             try:
                 location_geo = geolocator.geocode(i[2])
                 latitude_geo, longitude_geo = location_geo.latitude, location_geo.longitude
@@ -45,8 +45,9 @@ def year_list_with_coordinates(lst, year):
                 continue
     return answer_movie
 
-lst1 = read_file()
-print(year_list_with_coordinates(lst1, '2014'))
+
+# lst1 = read_file()
+# print(year_list_with_coordinates(lst1, '2014'))
 
 
 def map_func(year, lat, long):
@@ -55,35 +56,41 @@ def map_func(year, lat, long):
     """
     # your_address = place(lat, long)
     # print(your_address)
-    your_lat = round(lat, 1)
+    your_lat = round(lat)
+    your_long = round(long)
+    print(your_lat, your_long)
     geolocator = Nominatim(user_agent="specify_your_app_name_here")
     map = folium.Map(location=[lat, long], zoom_start=7, tiles='Stamen Terrain')
     file = read_file()
     finished_file = year_list_with_coordinates(file, year)
+    print(finished_file)
     fg_movies = folium.FeatureGroup(name="Movies")
     counter = 0
     for i in finished_file:
+        print(round(i[1]))
+        if round(i[1]) == your_lat and round(i[2]) == your_long:
         # a = i[2].split()[-2:]
         # for y in a:
         #     print(y)
         #     if y in your_address:
-                location_geo = geolocator.geocode(i[2], timeout=5)
-                if type(location_geo) == str:
-                    latitude_geo, longitude_geo = location_geo.latitude, location_geo.longitude
-                    fg_movies.add_child(folium.CircleMarker(location=[latitude_geo, longitude_geo],
+        #         location_geo = geolocator.geocode(i[2], timeout=5)
+        #         if type(location_geo) == str:
+        #             latitude_geo, longitude_geo = location_geo.latitude, location_geo.longitude
+                    fg_movies.add_child(folium.CircleMarker(location=[i[1], i[2]],
                                                             radius=10,
-                                                            popup=i[0],
+                                                            popup=i[0][0],
                                                             fill_color='red',
                                                             color='red', fill_opacity=0.5))
-        #         counter += 1
-        #         print(counter)
-        # if counter == 10:
-        #     break
+                    counter += 1
+                    print(counter)
+        if counter == 10:
+            break
     map.add_child(fg_movies)
     map.add_child(folium.LayerControl())
     map.save('Map_2.html')
 
-# map_func('2012', 48.314775, 25.082925)
+
+map_func('2010', 34.052235, -118.243683)
 
 
 
