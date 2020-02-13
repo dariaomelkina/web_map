@@ -11,9 +11,11 @@ def read_file():
     data = pandas.read_csv("locations1.csv", error_bad_lines=False)
     movie = data['movie']
     year = data['year']
-    location = data['location']
+    # location = data['location']
+    latitude = data['latitude']
+    longitude = data['longitude']
     x = []
-    for i in zip(movie, year, location):
+    for i in zip(movie, year, latitude, longitude):
         x.append(i)
     return x
 
@@ -36,7 +38,7 @@ def year_list_with_coordinates(lst, year):
     geolocator = Nominatim(user_agent="specify_your_app_name_here", timeout=3)
     geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1)
     for i in lst:
-        if i[1] == year:
+        if i[1] == year and type(i[4]) != str and type(i[5]) != str:
             try:
                 location_geo = geolocator.geocode(i[2])
                 latitude_geo, longitude_geo = location_geo.latitude, location_geo.longitude
