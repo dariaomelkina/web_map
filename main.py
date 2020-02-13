@@ -4,20 +4,48 @@ from geopy.geocoders import Nominatim
 from geopy.extra.rate_limiter import RateLimiter
 
 
+def check_coordinates(lat, long, location):
+    """
+
+    """
+
+
+
+def generate_tuple(x, year, lat, long):
+    """
+
+    """
+    for i in x:
+        if str(i[1]) == year:
+            if check_coordinates(lat, long, i[2]):
+                yield i
+
+
+
+
+
+
+
 def read_file():
     """
 
     """
-    data = pandas.read_csv("locations1.csv", error_bad_lines=False)
+    data = pandas.read_csv("locations.csv", error_bad_lines=False)
     movie = data['movie']
     year = data['year']
-    # location = data['location']
-    latitude = data['latitude']
-    longitude = data['longitude']
+    location = data['location']
+    # latitude = data['latitude']
+    # longitude = data['longitude']
     x = []
-    for i in zip(movie, year, latitude, longitude):
+    for i in zip(movie, year, location):
         x.append(i)
     return x
+
+
+x = read_file()
+mygenerator = generate_tuple(x, '2015', 34.052235, -118.243683)
+for i in mygenerator:
+    print(i)
 
 
 def place(lat, long):
@@ -92,7 +120,7 @@ def map_func(year, lat, long):
     map.save('Map_2.html')
 
 
-map_func('2010', 34.052235, -118.243683)
+# map_func('2010', 34.052235, -118.243683)
 
 
 
