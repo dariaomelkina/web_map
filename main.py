@@ -8,6 +8,17 @@ def check_coordinates(lat, long, location):
     """
 
     """
+    geolocator = Nominatim(user_agent="specify_your_app_name_here", timeout=3)
+    your_lat = round(lat)
+    your_long = round(long)
+    try:
+        location_geo = geolocator.geocode(location)
+        latitude_geo, longitude_geo = location_geo.latitude, location_geo.longitude
+        if round(latitude_geo) == your_lat and round(longitude_geo) == your_long:
+            return True
+        return False
+    except:
+        return False
 
 
 
@@ -44,8 +55,12 @@ def read_file():
 
 x = read_file()
 mygenerator = generate_tuple(x, '2015', 34.052235, -118.243683)
+a = 0
 for i in mygenerator:
+    a += 1
     print(i)
+    if a == 5:
+        break
 
 
 def place(lat, long):
@@ -86,8 +101,7 @@ def map_func(year, lat, long):
     """
     # your_address = place(lat, long)
     # print(your_address)
-    your_lat = round(lat)
-    your_long = round(long)
+
     print(your_lat, your_long)
     geolocator = Nominatim(user_agent="specify_your_app_name_here")
     map = folium.Map(location=[lat, long], zoom_start=7, tiles='Stamen Terrain')
