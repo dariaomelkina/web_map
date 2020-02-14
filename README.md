@@ -32,7 +32,6 @@ pip install geopy
 
 ### Приклад запуску введення та скріншот згенерованої мапи
 ```
->>> python main.py
 Please enter a year you would like to have a map for: 2017
 Please enter your location (format: lat, long): 34.0928, -118.3287
 Map is generating...
