@@ -5,12 +5,16 @@ from geopy.extra.rate_limiter import RateLimiter
 
 
 geolocator = Nominatim(user_agent="specify_your_app_name_here", timeout=3)
-geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1)
+geocode = RateLimiter(geolocator.geocode, min_delay_seconds=2, max_retries=4)
 
 
 def check_coordinates(lat_, long_, location):
     """
-
+    (float, float, str) -> bool
+    Return True, if location is near enough to you.
+    Return False otherwise.
+    >>> check_coordinates(51.5074, -0.1278, "Nashville Tennessee USA")
+    False
     """
     your_lat = int(lat_)
     your_long = int(long_)
@@ -30,7 +34,8 @@ def check_coordinates(lat_, long_, location):
 
 def generate_tuple(x, year_, lat_, long_):
     """
-
+    (list, str, float, float) -> tuple
+    Return tuple, if year is equal to the given year.
     """
     for i in x:
         if str(i[1]) == year_:
@@ -40,7 +45,8 @@ def generate_tuple(x, year_, lat_, long_):
 
 def read_file():
     """
-
+    () -> list
+    Return list with information from file (in tuples).
     """
     data = pandas.read_csv("locations.csv", error_bad_lines=False, warn_bad_lines=False)
     movie = data['movie']
@@ -55,6 +61,8 @@ def read_file():
 def map_func(year_, lat_, long_):
     """
     (str, float, float) -> None
+    Writes information about movies, filmed near to your location into
+    html file.
     """
     my_map = folium.Map(location=[lat_, long_], zoom_start=7, tiles='Stamen Terrain')
     fg_movies = folium.FeatureGroup(name="Movies")
@@ -84,9 +92,6 @@ def map_func(year_, lat_, long_):
     my_map.add_child(fg_connection)
     my_map.add_child(folium.LayerControl())
     my_map.save('Map.html')
-
-
-# map_func('2000', 51.5074, -0.1278)
 
 
 if __name__ == "__main__":
