@@ -73,9 +73,9 @@ def map_func(year, lat, long):
         fg_movies.add_child(folium.CircleMarker(location=[latitude_geo, longitude_geo],
                                                 radius=10,
                                                 popup=i[0],
-                                                fill_color='red',
-                                                color='red',
-                                                fill_opacity=0.5))
+                                                fill_color='yellow',
+                                                color='blue',
+                                                fill_opacity=0.6))
     map.add_child(fg_movies)
     map.add_child(folium.LayerControl())
     map.save('Map.html')
