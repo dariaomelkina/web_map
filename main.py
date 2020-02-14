@@ -8,12 +8,12 @@ geolocator = Nominatim(user_agent="specify_your_app_name_here", timeout=3)
 geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1)
 
 
-def check_coordinates(lat, long, location):
+def check_coordinates(lat_, long_, location):
     """
 
     """
-    your_lat = int(lat)
-    your_long = int(long)
+    your_lat = int(lat_)
+    your_long = int(long_)
     cond1 = range(your_lat - 1, your_lat + 2)
     cond2 = range(your_long - 1, your_long + 2)
     print(1)
@@ -28,13 +28,13 @@ def check_coordinates(lat, long, location):
         return False
 
 
-def generate_tuple(x, year, lat, long):
+def generate_tuple(x, year_, lat_, long_):
     """
 
     """
     for i in x:
-        if str(i[1]) == year:
-            if check_coordinates(lat, long, i[2]):
+        if str(i[1]) == year_:
+            if check_coordinates(lat_, long_, i[2]):
                 yield i
 
 
@@ -44,24 +44,24 @@ def read_file():
     """
     data = pandas.read_csv("locations.csv", error_bad_lines=False, warn_bad_lines=False)
     movie = data['movie']
-    year = data['year']
+    year_ = data['year']
     location = data['location']
     x = []
-    for i in zip(movie, year, location):
+    for i in zip(movie, year_, location):
         x.append(i)
     return x
 
 
-def map_func(year, lat, long):
+def map_func(year_, lat_, long_):
     """
     (str, float, float) -> None
     """
-    map = folium.Map(location=[lat, long], zoom_start=7, tiles='Stamen Terrain')
+    my_map = folium.Map(location=[lat_, long_], zoom_start=7, tiles='Stamen Terrain')
     fg_movies = folium.FeatureGroup(name="Movies")
     fg_connection = folium.FeatureGroup(name="Connection")
     finished_list = []
     x = read_file()
-    mygenerator = generate_tuple(x, year, lat, long)
+    mygenerator = generate_tuple(x, year_, lat_, long_)
     counter = 0
     for i in mygenerator:
         finished_list.append(i)
@@ -80,10 +80,10 @@ def map_func(year, lat, long):
                                                 color='blue',
                                                 fill_opacity=0.6))
     fg_connection.add_child(folium.PolyLine(points, color='yellow'))
-    map.add_child(fg_movies)
-    map.add_child(fg_connection)
-    map.add_child(folium.LayerControl())
-    map.save('Map.html')
+    my_map.add_child(fg_movies)
+    my_map.add_child(fg_connection)
+    my_map.add_child(folium.LayerControl())
+    my_map.save('Map.html')
 
 
 # map_func('2000', 51.5074, -0.1278)
