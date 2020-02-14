@@ -20,11 +20,9 @@ def check_coordinates(lat_, long_, location):
     your_long = int(long_)
     cond1 = range(your_lat - 1, your_lat + 2)
     cond2 = range(your_long - 1, your_long + 2)
-    print(1)
     try:
         location_geo = geolocator.geocode(location)
         latitude_geo, longitude_geo = location_geo.latitude, location_geo.longitude
-        print(latitude_geo, longitude_geo)
         if int(latitude_geo) in cond1 and int(longitude_geo) in cond2:
             return True
         return False
