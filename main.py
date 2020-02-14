@@ -58,6 +58,7 @@ def map_func(year, lat, long):
     """
     map = folium.Map(location=[lat, long], zoom_start=7, tiles='Stamen Terrain')
     fg_movies = folium.FeatureGroup(name="Movies")
+    fg_connection = folium.FeatureGroup(name="Connection")
     finished_list = []
     x = read_file()
     mygenerator = generate_tuple(x, year, lat, long)
@@ -67,16 +68,20 @@ def map_func(year, lat, long):
         counter += 1
         if counter == 10:
             break
+    points = []
     for i in finished_list:
         location_geo = geolocator.geocode(i[2], timeout=5)
         latitude_geo, longitude_geo = location_geo.latitude, location_geo.longitude
-        fg_movies.add_child(folium.CircleMarker(location=[latitude_geo, longitude_geo],
+        points.append((latitude_geo, longitude_geo))
+        fg_movies.add_child(folium.CircleMarker(location=(latitude_geo, longitude_geo),
                                                 radius=10,
                                                 popup=i[0],
                                                 fill_color='yellow',
                                                 color='blue',
                                                 fill_opacity=0.6))
+    fg_connection.add_child(folium.PolyLine(points, color='yellow'))
     map.add_child(fg_movies)
+    map.add_child(fg_connection)
     map.add_child(folium.LayerControl())
     map.save('Map.html')
 
