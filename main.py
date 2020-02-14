@@ -42,7 +42,7 @@ def read_file():
     """
 
     """
-    data = pandas.read_csv("locations.csv", error_bad_lines=False)
+    data = pandas.read_csv("locations.csv", error_bad_lines=False, warn_bad_lines=False)
     movie = data['movie']
     year = data['year']
     location = data['location']
